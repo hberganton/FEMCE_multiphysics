@@ -1,0 +1,58 @@
+%
+% Made by Henrique B. de Souza
+% This file contain all of the necessary input values for running FEMCE_multiphysics
+%
+
+
+%Geometry data
+L_magnet=10; %Magnet bore length
+ScaleFactor=1e-2; %1e-2 for cm, 1 for m, 1e-3 for mm, etc.
+x_refrigerant=0;     %position of the refrigerant
+
+refrigerant_cells=3:model.Geometry.NumCells; %model cells corresponding to the refrigerant 
+tube_cells=1; %model cells corresponding to the outer tube (where no fluid flows)
+inlet_walls=5; %model face corresponding to the inlet (where the fluid enters the tube)
+outlet_walls=6; %model face corresponding to the outlet (where the fluid leaves the tube)
+mid_shell=3;    %model face where the outer tube meets the inner tube
+outer_shell=[1,2,4]; %outmost walls of the tube, excluding the inlet and outlet
+
+
+%Material data
+rho = 7.9;   %density of Gd in g/cm^3
+
+%Fluid data
+mu=1e-3;     %fluid viscosity (NOT PERMEABILITY)
+u_max=.05;   %maximum fluid velocity in m/s
+
+
+%Temperature range 
+nT=6;        %Number of temperatures to simulate
+Tmin=285;    %Lowest temperature
+Tmax=302;    %Highest temperature
+
+%Number of x or theta values to simulate 
+Nx=10;       %Number of x (or theta) coordinates to be simulated
+
+
+%Stagedef should be Nstages*3 matrix
+%Stagedef(:,1) should be 0 or 1
+%0 means conventional MCE, 1 means rotating
+%Stagedef(:,2) is Hext IN TESLA (H*mu0)
+%Stagedef(:,3) is the THETA for conventional and PHI for rotating MCE
+%Stagedef(:,3) should be the first value for generalized coordinate
+%Stagedef(:,4) should be the last value for generalized coordinate 
+%Stagedef(~,4) may be lower than Stagedef(~,3)
+Stagedef=[
+         0    0.3000   90.0000   15.0000   30.0000;
+         0    0.7500   90.0000   15.0000   30.0000;
+         0    1.2000   90.0000   15.0000   30.0000;
+    1.0000    0.3000   90.0000   90.0000         0;
+    1.0000    0.7500   90.0000   90.0000         0;
+    1.0000    1.2000   90.0000   90.0000         0;
+];
+
+adiabatic=true; %adiabatic simulations if true, isothermal if false
+
+%Time parameters for heat simulation
+totalTime=2; %seconds
+nSteps=5; %number of time steps
